@@ -1,1 +1,8 @@
 **SOURCE CODE FILE FOR THE DATABASE APPLICATION**
+
+
+*Project Developers*
+1. Zioney Jayce A. Bajalan (Lead Developer)
+2. Harvey P. Magarin
+3. Charls Ruje Melindo
+4. Jireh Xaris S. Dumindin
