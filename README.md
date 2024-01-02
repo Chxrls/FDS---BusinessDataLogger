@@ -6,3 +6,5 @@
 2. Harvey P. Magarin
 3. Charls Ruje Melindo
 4. Jireh Xaris S. Dumindin
+----------------------------------
+*Also massive shoutout to ChatGPT for the debugging and testing*
