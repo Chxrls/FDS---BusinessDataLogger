@@ -318,8 +318,12 @@ def clear_entries():
     cost_entry.delete(0, tk.END)
     status_combobox.set('')  # Clear Combobox selection
 
+# Functions to validate the name and contact number data
 def validate_name(char):
     return char.isalpha() or char.isspace()
+
+def validate_contact(char):
+    return char.isdigit() and (len(contact_entry.get()) < 15 or char == '\x08')
 
 # GUI Setup
 root = tk.Tk()
@@ -357,8 +361,8 @@ client_type_business = tk.Radiobutton(technician_frame, text="Business", variabl
 address_label = tk.Label(technician_frame, text="Address:", bg=bg_color)
 address_entry = tk.Entry(technician_frame)
 
-contact_label = tk.Label(technician_frame, text="Contact Number:", bg=bg_color)
-contact_entry = tk.Entry(technician_frame, validate="key", validatecommand=(root.register(lambda char: char.isdigit() or char == ""), "%S"))
+contact_label = tk.Label(technician_frame, text="Contact Number (11 digits maximum):", bg=bg_color)
+contact_entry = tk.Entry(technician_frame, validate="key", validatecommand=(root.register(validate_contact), "%S"))
 
 device_label = tk.Label(technician_frame, text="Device Type:", bg=bg_color)
 device_entry = tk.Entry(technician_frame)
@@ -395,9 +399,9 @@ device_entry.grid(row=6, column=1, padx=5, pady=5)
 issue_label.grid(row=7, column=0, padx=5, pady=5)
 issue_entry.grid(row=7, column=1, padx=5, pady=5)
 
-add_button.grid(row=8, columnspan=3, padx=5, pady=5)
-status_label.grid(row=9, column=0, padx=5, pady=5)
-status_combobox.grid(row=9, column=1, padx=5, pady=5)
+add_button.grid(row=10, columnspan=3, padx=5, pady=5)
+status_label.grid(row=8, column=0, padx=5, pady=5)
+status_combobox.grid(row=8, column=1, padx=5, pady=5)
 #update_status_button.grid(row=10, columnspan=3, padx=5, pady=5)
 
 # Admin Page
