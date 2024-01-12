@@ -164,17 +164,14 @@ def edit_client():
 
     edit_service_label = tk.Label(edit_window, text="Service Type:")
     edit_service_var = tk.StringVar()
-   # edit_service_var.set(current_details[3] if current_details and len(current_details) > 3 else "Select a service type")  # Populate with current service
     edit_service_dropdown = ttk.Combobox(edit_window, textvariable=edit_service_var, values=service_options, state='readonly')
 
     edit_cost_label = tk.Label(edit_window, text="Quoted Cost:")
     edit_cost_entry = tk.Entry(edit_window, validate="key",
                                validatecommand=(root.register(lambda char: char.isdigit() or char == ""), "%S"))
-   # edit_cost_entry.insert(0, current_details[4] if current_details and len(current_details) > 4 else "Cost")  # Populate with current cost
 
     edit_client_type_label = tk.Label(edit_window, text="Client Type:")
     edit_client_type_var = tk.StringVar()
-   # edit_client_type_var.set(current_details[2] if current_details and len(current_details) > 2 else "")  # Populate with current client type
     edit_client_type_client = ttk.Radiobutton(edit_window, text="Client", variable=edit_client_type_var, value="Client",
                                               style="TRadiobutton")
     edit_client_type_business = ttk.Radiobutton(edit_window, text="Business", variable=edit_client_type_var,
@@ -183,19 +180,24 @@ def edit_client():
     edit_status_label = tk.Label(edit_window, text="Update Status:")
     edit_status_values = ["Not Started", "Ongoing", "Almost finished", "Done"]
     edit_status_var = tk.StringVar()
-   # edit_status_var.set(current_details[5] if current_details and len(current_details) > 5 else "Select a status")  # Populate with current status
     edit_status_combobox = ttk.Combobox(edit_window, textvariable=edit_status_var, values=edit_status_values, state='readonly')
+    edit_status_combobox.set(current_details[5] if current_details and len(current_details) > 5 else "Select a status")  # Populate with current status
 
     # Additional fields for address and contact number
     edit_address_label = tk.Label(edit_window, text="Address:")
     edit_address_entry = tk.Entry(edit_window)
-   # edit_address_entry.insert(0, current_details[6] if current_details and len(current_details) > 6 else "Address")  # Populate with current address
 
     edit_contact_label = tk.Label(edit_window, text="Contact Number:")
     edit_contact_entry = tk.Entry(edit_window, validate="key",
                                   validatecommand=(root.register(lambda char: char.isdigit() or char == ""), "%S"))
 
-    # edit_contact_entry.insert(0, current_details[7] if current_details and len(current_details) > 7 else "Contact Number")  # Populate with current contact number
+    # Populate with current values
+    #edit_service_var.set(current_details[5] if current_details and len(current_details) > 3 else "Select a service type")
+    edit_cost_entry.insert(0, current_details[4] if current_details and len(current_details) > 4 else "Cost")
+    edit_client_type_var.set(current_details[2] if current_details and len(current_details) > 2 else "")
+    edit_status_combobox.set(current_details[5] if current_details and len(current_details) > 5 else "Select a status")  # Populate with current status
+    #edit_address_entry.insert(0, current_details[6] if current_details and len(current_details) > 6 else "Address")  # Populate with current address
+    edit_contact_entry.insert(0, current_details[7] if current_details and len(current_details) > 7 else "Contact Number")
 
     # Create a function to save changes
     def save_changes():
@@ -204,7 +206,7 @@ def edit_client():
         new_cost = edit_cost_entry.get()
         new_client_type = edit_client_type_var.get()
         new_status = edit_status_var.get()
-        new_address = edit_address_entry.get()
+        new_address = edit_address_entry.get()  # Get the new address
         new_contact = edit_contact_entry.get()
 
         # Check for empty fields
@@ -218,8 +220,8 @@ def edit_client():
                       (new_name, new_client_type, new_service, new_cost, new_status, new_address, new_contact, selected_client_name))
         elif "(Business)" in selected_client:
             # Update the business in the businesses table
-            c.execute('''UPDATE businesses SET BusinessName = ?, technicianID = ?, ContactNo = ? WHERE BusinessName = ?''',
-                      (new_name, 1, new_contact, selected_client_name))
+            c.execute('''UPDATE businesses SET BusinessName = ?, technicianID = ?, ContactNo = ?, Address = ? WHERE BusinessName = ?''',
+                      (new_name, 1, new_contact, new_address, selected_client_name))
 
         conn.commit()
         messagebox.showinfo("Success", "Client/business information updated successfully")
@@ -246,6 +248,8 @@ def edit_client():
     edit_contact_label.grid(row=6, column=0, padx=5, pady=5)
     edit_contact_entry.grid(row=6, column=1, padx=5, pady=5)
     save_button.grid(row=7, columnspan=2, padx=5, pady=5)
+
+
 
 
 # Function to display all client information from the database
@@ -313,11 +317,13 @@ def show_client_details(event):
         details_text += f"Device Type: {client_details[6]}\n"
         details_text += f"Issue Description: {client_details[7]}\n"
         details_text += f"Quoted Cost: {client_details[8]} PHP\n"
+        details_text += f"Status: {client_details[4]}\n"  # Added line for service status
 
         details_text += "===================================\n"
         client_info_label.config(text=details_text)
     else:
         client_info_label.config(text=f"No details found for {client_type}: {selected_client_name}")
+
 
 
 # Function to clear entry fields
