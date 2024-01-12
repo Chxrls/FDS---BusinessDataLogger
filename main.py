@@ -9,6 +9,9 @@ conn = sqlite3.connect('techtalk_computer_services.db')
 c = conn.cursor()
 
 # Create tables for businesses, clients, services, and technicians
+c.execute('''CREATE TABLE IF NOT EXISTS technician (
+                TechnicianID INTEGER PRIMARY KEY
+            )''')
 c.execute('''CREATE TABLE IF NOT EXISTS businesses (
                 BusinessID INTEGER PRIMARY KEY,
                 TechnicianID INTEGER NOT NULL REFERENCES technician(TechnicianID),
@@ -151,6 +154,9 @@ def edit_client():
     edit_window.title("Edit Client Information")
     edit_window.resizable(False, False)
 
+    style = ttk.Style()
+    style.configure("TRadiobutton", background="#f0f0f0")
+
     # Create labels and entry fields for editing
     edit_name_label = tk.Label(edit_window, text="Full Name or Business:")
     edit_name_entry = tk.Entry(edit_window)
@@ -169,8 +175,10 @@ def edit_client():
     edit_client_type_label = tk.Label(edit_window, text="Client Type:")
     edit_client_type_var = tk.StringVar()
    # edit_client_type_var.set(current_details[2] if current_details and len(current_details) > 2 else "")  # Populate with current client type
-    edit_client_type_client = tk.Radiobutton(edit_window, text="Client", variable=edit_client_type_var, value="Client")
-    edit_client_type_business = tk.Radiobutton(edit_window, text="Business", variable=edit_client_type_var, value="Business")
+    edit_client_type_client = ttk.Radiobutton(edit_window, text="Client", variable=edit_client_type_var, value="Client",
+                                              style="TRadiobutton")
+    edit_client_type_business = ttk.Radiobutton(edit_window, text="Business", variable=edit_client_type_var,
+                                                value="Business", style="TRadiobutton")
 
     edit_status_label = tk.Label(edit_window, text="Update Status:")
     edit_status_values = ["Not Started", "Ongoing", "Almost finished", "Done"]
@@ -304,7 +312,7 @@ def show_client_details(event):
         details_text += f"Service Type: {client_details[5]}\n"
         details_text += f"Device Type: {client_details[6]}\n"
         details_text += f"Issue Description: {client_details[7]}\n"
-        details_text += f"Quoted Cost: {client_details[8]}\n"
+        details_text += f"Quoted Cost: {client_details[8]} PHP\n"
 
         details_text += "===================================\n"
         client_info_label.config(text=details_text)
@@ -342,6 +350,9 @@ root.configure(bg=bg_color)
 technician_frame = tk.Frame(root, bg=bg_color)
 admin_frame = tk.Frame(root, bg=bg_color)
 
+style = ttk.Style()
+style.configure("TRadiobutton", background=bg_color)
+
 # Technician Page
 name_label = tk.Label(technician_frame, text="Full Name or Business:", bg=bg_color)
 name_entry = tk.Entry(technician_frame, validate="key", validatecommand=(root.register(validate_name), "%S"))
@@ -350,12 +361,12 @@ service_options = ["Select a service type:", "Computer Formatting", "Computer Up
 service_var = tk.StringVar()
 service_var.set(service_options[0])
 service_dropdown = ttk.Combobox(technician_frame, textvariable=service_var, values=service_options, state='readonly')
-cost_label = tk.Label(technician_frame, text="Quoted Cost:", bg=bg_color)
+cost_label = tk.Label(technician_frame, text="Quoted Cost: (In PHP)", bg=bg_color)
 cost_entry = tk.Entry(technician_frame, validate="key", validatecommand=(root.register(lambda char: char.isdigit() or char == ""), "%S"))
 client_type_label = tk.Label(technician_frame, text="Client Type:", bg=bg_color)
 client_type_var = tk.StringVar()
-client_type_client = tk.Radiobutton(technician_frame, text="Client", variable=client_type_var, value="Client", bg=bg_color)
-client_type_business = tk.Radiobutton(technician_frame, text="Business", variable=client_type_var, value="Business", bg=bg_color)
+client_type_client = ttk.Radiobutton(technician_frame, text="Client", variable=client_type_var, value="Client", style="TRadiobutton")
+client_type_business = ttk.Radiobutton(technician_frame, text="Business", variable=client_type_var, value="Business", style="TRadiobutton")
 
 # Add new entry boxes for address, contact number, device type, and issue description
 address_label = tk.Label(technician_frame, text="Address:", bg=bg_color)
